@@ -3,6 +3,7 @@ import { HomePage } from '../pages/Home/pages';
 import { LoginPage } from '../pages/Login/pages';
 import { ErrorPage } from '../pages/Error/ErrorPage';
 import Root from '../components/Root/Root';
+import PrivateRoute from './PrivateRoute';
 export const router = createBrowserRouter([
   {
     path: '/',
@@ -10,10 +11,11 @@ export const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
+        element: <PrivateRoute />,
         errorElement: <ErrorPage />,
         children: [
           { index: true, element: <HomePage /> },
-          { path: 'login', element: <LoginPage /> },
+
           /* 
           {
             path: 'contacts/:contactId',
@@ -24,4 +26,5 @@ export const router = createBrowserRouter([
       },
     ],
   },
+  { path: 'login', element: <LoginPage /> },
 ]);
