@@ -2,8 +2,8 @@ import { createBrowserRouter } from 'react-router-dom';
 import { HomePage } from '../pages/Home/pages';
 import { LoginPage } from '../pages/Login/pages';
 import { ErrorPage } from '../pages/Error/ErrorPage';
-import Root from '../components/Root/Root';
 import PrivateRoute from './PrivateRoute';
+import { Root } from '@/components';
 export const router = createBrowserRouter([
   {
     path: '/',

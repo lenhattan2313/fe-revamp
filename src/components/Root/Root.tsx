@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
 
-const Root = () => {
+export const Root = () => {
   return (
     <div>
       <h1>header</h1>
@@ -9,5 +9,3 @@ const Root = () => {
     </div>
   );
 };
-
-export default Root;
