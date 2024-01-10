@@ -1,3 +1,4 @@
+import { getItem, setItem } from '@/utils/localStorage';
 import { create } from 'zustand';
 
 interface AuthState {
@@ -9,12 +10,13 @@ export interface AuthStore extends AuthState {
 }
 
 const initialState: Pick<AuthStore, keyof AuthState> = {
-  isAuthenticated: false,
+  isAuthenticated: getItem('isAuthenticated') || false,
 };
 
 const useAuthStore = create<AuthStore>((set) => ({
   ...initialState,
   setIsAuthenticated: (isAuthenticated) => {
+    setItem('isAuthenticated', isAuthenticated);
     set(() => ({ isAuthenticated }));
   },
 }));

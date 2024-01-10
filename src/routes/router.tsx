@@ -3,11 +3,11 @@ import { HomePage } from '../pages/Home/pages';
 import { LoginPage } from '../pages/Login/pages';
 import { ErrorPage } from '../pages/Error/ErrorPage';
 import PrivateRoute from './PrivateRoute';
-import { Root } from '@/components';
+import { BasicLayout } from '@/layout';
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <Root />,
+    element: <BasicLayout />,
     errorElement: <ErrorPage />,
     children: [
       {

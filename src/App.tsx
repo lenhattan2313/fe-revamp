@@ -6,13 +6,14 @@ import { CssBaseline } from '@mui/material';
 import theme from './utils/theme';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
+import { Spinner } from './components';
 
 const queryClient = new QueryClient();
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Suspense fallback={'fallback'}>
+      <Suspense fallback={<Spinner />}>
         <QueryClientProvider client={queryClient}>
           <RouterProvider router={router} />
           <ReactQueryDevtools initialIsOpen={false} />

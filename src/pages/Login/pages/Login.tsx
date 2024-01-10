@@ -1,3 +1,4 @@
+import useAuthStore from '@/auth/useAuthStore';
 import { Button, FormInput } from '@/components';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
@@ -9,12 +10,13 @@ import {
   useTheme,
 } from '@mui/material';
 import { useState } from 'react';
-import { useForm, FormProvider } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import { IFormLoginData } from '../types/ILogin';
-import { useLogin } from '../api/login';
 const Login = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   function handleShowPassword() {
     setShowPassword((pre) => !pre);
@@ -31,15 +33,21 @@ const Login = () => {
     resolver: yupResolver(validateSchema),
   });
   const { handleSubmit } = form;
-  const { mutate: login, isLoading } = useLogin();
+  // const { mutate: login, isLoading } = useLogin();
 
+  const setIsAuthenticated = useAuthStore((state) => state.setIsAuthenticated);
   function onSubmit(data: IFormLoginData) {
-    login(data, {
-      onError: (error) => {
-        console.log(error);
-      },
-      onSuccess: () => {},
-    });
+    if (!data) return;
+    setIsAuthenticated(true);
+    navigate('../');
+    // login(data, {
+    //   onError: (error) => {
+    //     console.log(error);
+    //   },
+    //   onSuccess: () => {
+    //     navigate('../'); //goto home page
+    //   },
+    // });
   }
   return (
     <Box
@@ -85,7 +93,7 @@ const Login = () => {
         <Button
           label="LOGIN"
           variant="contained"
-          loading={isLoading}
+          // loading={isLoading}
           onClick={handleSubmit(onSubmit)}
         />
       </Box>
