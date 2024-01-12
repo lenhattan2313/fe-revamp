@@ -1,3 +1,4 @@
+import useNavbarStore from '@/store/useNavbarStore';
 import { ChevronLeft, Inbox, Mail } from '@mui/icons-material';
 import {
   CSSObject,
@@ -12,18 +13,15 @@ import {
   Theme,
   styled,
 } from '@mui/material';
-import { Dispatch, FC, SetStateAction } from 'react';
-interface INavbarProps {
-  open: boolean;
-  setOpen: Dispatch<SetStateAction<boolean>>;
-}
 
-export const Navbar: FC<INavbarProps> = ({ open, setOpen }) => {
+export const Navbar = () => {
+  const isOpen = useNavbarStore((state) => state.isOpen);
+  const setOpen = useNavbarStore((state) => state.setOpen);
   function handleOnChangeDrawer() {
-    setOpen((o) => !o);
+    setOpen(!isOpen);
   }
   return (
-    <Drawer variant="permanent" open={open}>
+    <Drawer variant="permanent" open={isOpen}>
       <DrawerHeader>
         <IconButton onClick={handleOnChangeDrawer}>
           <ChevronLeft fontSize="small" />
@@ -36,14 +34,14 @@ export const Navbar: FC<INavbarProps> = ({ open, setOpen }) => {
             <ListItemButton
               sx={{
                 minHeight: 48,
-                justifyContent: open ? 'initial' : 'center',
+                justifyContent: isOpen ? 'initial' : 'center',
                 px: 2.5,
               }}
             >
               <ListItemIcon
                 sx={{
                   minWidth: 0,
-                  mr: open ? 3 : 'auto',
+                  mr: isOpen ? 3 : 'auto',
                   justifyContent: 'center',
                 }}
               >
@@ -53,7 +51,7 @@ export const Navbar: FC<INavbarProps> = ({ open, setOpen }) => {
                   <Mail fontSize="small" />
                 )}
               </ListItemIcon>
-              <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+              <ListItemText primary={text} sx={{ opacity: isOpen ? 1 : 0 }} />
             </ListItemButton>
           </ListItem>
         ))}

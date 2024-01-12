@@ -1,26 +1,25 @@
+import useNavbarStore from '@/store/useNavbarStore';
 import {
   AccountCircle,
   Menu as MenuIcon,
   Notifications,
 } from '@mui/icons-material';
 import {
-  AppBar as MuiAppBar,
   Badge,
   Box,
   IconButton,
-  Toolbar,
   Menu,
   MenuItem,
-  styled,
+  AppBar as MuiAppBar,
   AppBarProps as MuiAppBarProps,
+  Toolbar,
+  styled,
 } from '@mui/material';
-import { Dispatch, FC, SetStateAction, useState } from 'react';
-interface IHeaderProps {
-  open: boolean;
-  setOpen: Dispatch<SetStateAction<boolean>>;
-}
+import { useState } from 'react';
 
-export const Header: FC<IHeaderProps> = ({ open, setOpen }) => {
+export const Header = () => {
+  const isOpen = useNavbarStore((state) => state.isOpen);
+  const setOpen = useNavbarStore((state) => state.setOpen);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const isMenuOpen = Boolean(anchorEl);
 
@@ -35,7 +34,7 @@ export const Header: FC<IHeaderProps> = ({ open, setOpen }) => {
   }
   return (
     <Box>
-      <AppBar position="fixed" sx={{ height: '3rem' }} open={open}>
+      <AppBar position="fixed" sx={{ height: '3rem' }} open={isOpen}>
         <Toolbar sx={{ minHeight: '3rem !important' }}>
           <IconButton
             size="large"
@@ -43,7 +42,7 @@ export const Header: FC<IHeaderProps> = ({ open, setOpen }) => {
             color="inherit"
             aria-label="open drawer"
             onClick={handleDrawerOpen}
-            sx={{ mr: 2, ...(open && { display: 'none' }) }}
+            sx={{ mr: 2, ...(isOpen && { display: 'none' }) }}
           >
             <MenuIcon fontSize="small" />
           </IconButton>
