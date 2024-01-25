@@ -3,21 +3,19 @@ import { Outlet } from 'react-router-dom';
 import { Header } from './Header';
 import { Navbar } from './Narbar';
 import { useEffect } from 'react';
-import useNavbarStore from '@/store/useNavbarStore';
+import useNavbarStore from '@/store/useGlobalStore';
 
 export const BasicLayout = () => {
-  const setOpen = useNavbarStore((state) => state.setOpen);
+  const toggleMenu = useNavbarStore((state) => state.toggleMenu);
   const matches = useMediaQuery('(max-width:600px)');
   useEffect(() => {
     if (matches) {
-      setOpen(false);
+      toggleMenu(false);
     } else {
-      setOpen(true);
+      toggleMenu(true);
     }
-  }, [setOpen, matches]);
-  useEffect(() => {
-    console.log('mount');
-  });
+  }, [toggleMenu, matches]);
+
   return (
     <Box sx={{ display: 'flex' }}>
       <Header />

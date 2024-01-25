@@ -1,15 +1,25 @@
 export type IFormLoginData = {
-  userName: string;
+  email: string;
   password: string;
 };
+
+export type LoginResponse = {
+  shop: Shop;
+  token: AuthToken;
+};
+
+export type Shop = {
+  email: string;
+  _id: string;
+};
+
 export type AuthToken = {
-  token: string;
+  accessToken: string;
   refreshToken: string;
 };
 
 export type Profile = {
   userId: string;
-  userName: string;
   displayName: string;
   email: string;
   roles: string[];

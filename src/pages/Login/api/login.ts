@@ -3,29 +3,32 @@ import { BaseResponse, ConfigQueryOption } from '@/types';
 import { api } from '@/utils/axios';
 import { AxiosError, AxiosResponse } from 'axios';
 import { useMutation, useQuery } from 'react-query';
-import { AuthToken, IFormLoginData, Profile } from '../types/ILogin';
+import { IFormLoginData, LoginResponse, Profile } from '../types/ILogin';
 
 export const useLogin = () => {
   return useMutation<
-    AxiosResponse<BaseResponse<AuthToken>>,
-    AxiosError<BaseResponse<string>>,
+    BaseResponse<LoginResponse>,
+    BaseResponse<string>,
     IFormLoginData
-  >(async ({ userName, password }: IFormLoginData) => {
-    const response = await api.post<BaseResponse<AuthToken>>('/login', {
-      userName,
-      password,
-    });
-    return response;
+  >(async ({ email, password }: IFormLoginData) => {
+    const { data } = await api.post<BaseResponse<LoginResponse>>(
+      '/shop/login',
+      {
+        email,
+        password,
+      },
+    );
+    return data;
   });
 };
 
 export const useResetPassword = () => {
   return useMutation<
-    AxiosResponse<BaseResponse<AuthToken>>,
+    AxiosResponse<BaseResponse<LoginResponse>>,
     AxiosError,
     IFormLoginData
-  >(async ({ userName }: IFormLoginData) => {
-    const response = await api.post('/resetPassword', { userName });
+  >(async ({ email }: IFormLoginData) => {
+    const response = await api.post('/resetPassword', { email });
     return response;
   });
 };

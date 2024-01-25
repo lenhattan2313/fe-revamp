@@ -1,4 +1,5 @@
-import useNavbarStore from '@/store/useNavbarStore';
+import useAuthStore from '@/auth/useAuthStore';
+import useNavbarStore from '@/store/useGlobalStore';
 import {
   AccountCircle,
   Menu as MenuIcon,
@@ -18,10 +19,11 @@ import {
 import { useState } from 'react';
 
 export const Header = () => {
-  const isOpen = useNavbarStore((state) => state.isOpen);
-  const setOpen = useNavbarStore((state) => state.setOpen);
+  const isMenuOpen = useNavbarStore((state) => state.isMenuOpen);
+  const toggleMenu = useNavbarStore((state) => state.toggleMenu);
+  const setIsAuthenticated = useAuthStore((state) => state.setIsAuthenticated);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const isMenuOpen = Boolean(anchorEl);
+  const isOpen = Boolean(anchorEl);
 
   function handleProfileMenuOpen(event: React.MouseEvent<HTMLElement>) {
     setAnchorEl(event.currentTarget);
@@ -30,11 +32,14 @@ export const Header = () => {
     setAnchorEl(null);
   }
   function handleDrawerOpen() {
-    setOpen(true);
+    toggleMenu(true);
+  }
+  function handleLogout() {
+    setIsAuthenticated(false);
   }
   return (
     <Box>
-      <AppBar position="fixed" sx={{ height: '3rem' }} open={isOpen}>
+      <AppBar position="fixed" sx={{ height: '3rem' }} open={isMenuOpen}>
         <Toolbar sx={{ minHeight: '3rem !important' }}>
           <IconButton
             size="large"
@@ -42,7 +47,7 @@ export const Header = () => {
             color="inherit"
             aria-label="open drawer"
             onClick={handleDrawerOpen}
-            sx={{ mr: 2, ...(isOpen && { display: 'none' }) }}
+            sx={{ mr: 2, ...(isMenuOpen && { display: 'none' }) }}
           >
             <MenuIcon fontSize="small" />
           </IconButton>
@@ -77,11 +82,12 @@ export const Header = () => {
           horizontal: 'right',
         }}
         keepMounted
-        open={isMenuOpen}
+        open={isOpen}
         onClose={handleMenuClose}
       >
         <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
         <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+        <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </Menu>
     </Box>
   );

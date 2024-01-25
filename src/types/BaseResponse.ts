@@ -3,8 +3,8 @@ import { UseQueryOptions } from 'react-query';
 
 export interface BaseResponse<T> {
   statusCode: number;
-  data: T;
-  errMsg: string;
+  metadata: T;
+  message: string;
 }
 export interface ListObject<T> {
   totalItemCount: number;

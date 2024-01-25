@@ -1,5 +1,5 @@
 import useAuthStore from '@/auth/useAuthStore';
-import { Button, FormInput } from '@/components';
+import { Button, FormInput, useAlert } from '@/components';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import {
@@ -13,8 +13,10 @@ import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
+import { useLogin } from '../api/login';
 import { IFormLoginData } from '../types/ILogin';
 const Login = () => {
+  const { showSnackbar } = useAlert();
   const theme = useTheme();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
@@ -22,32 +24,41 @@ const Login = () => {
     setShowPassword((pre) => !pre);
   }
   const validateSchema = yup.object().shape({
-    userName: yup.string().required('Field is required!'),
+    email: yup.string().required('Field is required!'),
     password: yup.string().required('Field is required!'),
   });
   const form = useForm<IFormLoginData>({
     defaultValues: {
-      userName: '',
+      email: '',
       password: '',
     },
     resolver: yupResolver(validateSchema),
   });
   const { handleSubmit } = form;
-  // const { mutate: login, isLoading } = useLogin();
+  const { mutate: loginAction, isLoading } = useLogin();
 
-  const setIsAuthenticated = useAuthStore((state) => state.setIsAuthenticated);
+  const setAuthenticated = useAuthStore((state) => state.setAuthenticated);
   function onSubmit(data: IFormLoginData) {
     if (!data) return;
-    setIsAuthenticated(true);
-    navigate('../');
-    // login(data, {
-    //   onError: (error) => {
-    //     console.log(error);
-    //   },
-    //   onSuccess: () => {
-    //     navigate('../'); //goto home page
-    //   },
-    // });
+    loginAction(data, {
+      onError: (error) => {
+        showSnackbar(error.message, 'error');
+      },
+      onSuccess: (data) => {
+        const {
+          shop,
+          token: { accessToken, refreshToken },
+        } = data.metadata;
+
+        setAuthenticated({
+          isAuthenticated: true,
+          accessToken,
+          refreshToken,
+          shopId: shop._id,
+        });
+        navigate('../'); //goto home page
+      },
+    });
   }
   return (
     <Box
@@ -72,7 +83,7 @@ const Login = () => {
       >
         <Typography variant="h5">Welcome</Typography>
         <FormProvider {...form}>
-          <FormInput name="userName" label="Username" required />
+          <FormInput name="email" label="Email" required />
           <FormInput
             name="password"
             label="Password"
@@ -93,7 +104,7 @@ const Login = () => {
         <Button
           label="LOGIN"
           variant="contained"
-          // loading={isLoading}
+          loading={isLoading}
           onClick={handleSubmit(onSubmit)}
         />
       </Box>

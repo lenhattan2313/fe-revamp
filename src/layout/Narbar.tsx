@@ -1,4 +1,4 @@
-import useNavbarStore from '@/store/useNavbarStore';
+import useNavbarStore from '@/store/useGlobalStore';
 import { ChevronLeft, Inbox, Mail } from '@mui/icons-material';
 import {
   CSSObject,
@@ -15,13 +15,13 @@ import {
 } from '@mui/material';
 
 export const Navbar = () => {
-  const isOpen = useNavbarStore((state) => state.isOpen);
-  const setOpen = useNavbarStore((state) => state.setOpen);
+  const isMenuOpen = useNavbarStore((state) => state.isMenuOpen);
+  const toggleMenu = useNavbarStore((state) => state.toggleMenu);
   function handleOnChangeDrawer() {
-    setOpen(!isOpen);
+    toggleMenu(!isMenuOpen);
   }
   return (
-    <Drawer variant="permanent" open={isOpen}>
+    <Drawer variant="permanent" open={isMenuOpen}>
       <DrawerHeader>
         <IconButton onClick={handleOnChangeDrawer}>
           <ChevronLeft fontSize="small" />
@@ -34,14 +34,14 @@ export const Navbar = () => {
             <ListItemButton
               sx={{
                 minHeight: 48,
-                justifyContent: isOpen ? 'initial' : 'center',
+                justifyContent: isMenuOpen ? 'initial' : 'center',
                 px: 2.5,
               }}
             >
               <ListItemIcon
                 sx={{
                   minWidth: 0,
-                  mr: isOpen ? 3 : 'auto',
+                  mr: isMenuOpen ? 3 : 'auto',
                   justifyContent: 'center',
                 }}
               >
@@ -51,7 +51,10 @@ export const Navbar = () => {
                   <Mail fontSize="small" />
                 )}
               </ListItemIcon>
-              <ListItemText primary={text} sx={{ opacity: isOpen ? 1 : 0 }} />
+              <ListItemText
+                primary={text}
+                sx={{ opacity: isMenuOpen ? 1 : 0 }}
+              />
             </ListItemButton>
           </ListItem>
         ))}

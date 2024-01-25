@@ -6,7 +6,7 @@ import { CssBaseline } from '@mui/material';
 import theme from './utils/theme';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
-import { Spinner } from './components';
+import { AlertProvider, Spinner } from './components';
 
 const queryClient = new QueryClient();
 function App() {
@@ -15,7 +15,9 @@ function App() {
       <CssBaseline />
       <Suspense fallback={<Spinner />}>
         <QueryClientProvider client={queryClient}>
-          <RouterProvider router={router} />
+          <AlertProvider>
+            <RouterProvider router={router} />
+          </AlertProvider>
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </Suspense>

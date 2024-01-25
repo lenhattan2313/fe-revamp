@@ -4,6 +4,7 @@ import {
   type InternalAxiosRequestConfig,
 } from 'axios';
 import { getItem } from './localStorage';
+import { LOCAL_STORAGE_KEY } from '@/constants';
 
 export interface ConsoleError {
   status: number;
@@ -13,9 +14,11 @@ export interface ConsoleError {
 export const requestInterceptor = (
   config: InternalAxiosRequestConfig,
 ): InternalAxiosRequestConfig => {
-  const token = getItem<string>('token');
-  if (token) {
+  const token = getItem<string>(LOCAL_STORAGE_KEY.ACCESS_TOKEN);
+  const shopId = getItem<string>(LOCAL_STORAGE_KEY.SHOP_ID);
+  if (token && shopId) {
     config.headers.set('Authorization', `Bearer ${token}`);
+    config.headers.set('x-api-key', shopId);
   }
   return config;
 };
@@ -28,12 +31,8 @@ export const errorInterceptor = async (error: AxiosError): Promise<void> => {
   if (error.response?.status === 401) {
     await Promise.reject(error);
   } else {
-    if (error.response) {
-      const errorMessage: ConsoleError = {
-        status: error.response.status,
-        data: error.response.data,
-      };
-      console.error(errorMessage);
+    if (error.response?.data) {
+      return Promise.reject(error.response.data);
     } else if (error.request) {
       console.error(error.request);
     } else {

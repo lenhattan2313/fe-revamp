@@ -4,13 +4,14 @@ import {
   requestInterceptor,
   successInterceptor,
 } from './interceptors';
-
+console.log('aaa', import.meta.env.VITE_API_URL);
 const axiosRequestConfig: AxiosRequestConfig = {
-  baseURL: import.meta.env.API_URL,
+  baseURL: import.meta.env.VITE_API_URL,
   responseType: 'json',
   headers: {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',
+    'x-api-key': import.meta.env.VITE_API_KEY,
   },
 };
 
