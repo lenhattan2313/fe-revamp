@@ -17,8 +17,8 @@ export const requestInterceptor = (
   const token = getItem<string>(LOCAL_STORAGE_KEY.ACCESS_TOKEN);
   const shopId = getItem<string>(LOCAL_STORAGE_KEY.SHOP_ID);
   if (token && shopId) {
-    config.headers.set('Authorization', `Bearer ${token}`);
-    config.headers.set('x-api-key', shopId);
+    config.headers.set('access-token', token);
+    config.headers.set('x-client-id', shopId);
   }
   return config;
 };

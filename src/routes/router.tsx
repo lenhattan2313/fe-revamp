@@ -1,9 +1,10 @@
+import { BasicLayout } from '@/layout';
+import { ProductPage } from '@/pages/Product/pages';
 import { createBrowserRouter } from 'react-router-dom';
+import { ErrorPage } from '../pages/Error/ErrorPage';
 import { HomePage } from '../pages/Home/pages';
 import { LoginPage } from '../pages/Login/pages';
-import { ErrorPage } from '../pages/Error/ErrorPage';
 import PrivateRoute from './PrivateRoute';
-import { BasicLayout } from '@/layout';
 export const router = createBrowserRouter([
   {
     path: '/',
@@ -14,14 +15,11 @@ export const router = createBrowserRouter([
         element: <PrivateRoute />,
         errorElement: <ErrorPage />,
         children: [
-          { index: true, element: <HomePage /> },
-
-          /* 
+          { index: true, element: <ProductPage /> },
           {
-            path: 'contacts/:contactId',
-            element: <Contact />,
+            path: 'product/',
+            element: <HomePage />,
           },
-          */
         ],
       },
     ],

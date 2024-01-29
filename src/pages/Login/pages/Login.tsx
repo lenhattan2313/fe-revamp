@@ -1,5 +1,5 @@
 import useAuthStore from '@/auth/useAuthStore';
-import { Button, FormInput, useAlert } from '@/components';
+import { Button, FormInput } from '@/components';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import {
@@ -15,6 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import { useLogin } from '../api/login';
 import { IFormLoginData } from '../types/ILogin';
+import { useAlert } from '@/hooks';
 const Login = () => {
   const { showSnackbar } = useAlert();
   const theme = useTheme();

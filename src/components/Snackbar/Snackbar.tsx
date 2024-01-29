@@ -1,12 +1,6 @@
-import React, {
-  FC,
-  ReactNode,
-  createContext,
-  useContext,
-  useState,
-} from 'react';
-import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
+import { FC, ReactNode, createContext, useState } from 'react';
 
 type Severity = 'success' | 'error' | 'warning' | 'info';
 
@@ -22,15 +16,10 @@ interface AlertContextProps {
   closeSnackbar: (id: number) => void;
 }
 
-const AlertContext = createContext<AlertContextProps | undefined>(undefined);
+export const AlertContext = createContext<AlertContextProps | undefined>(
+  undefined,
+);
 
-export const useAlert = () => {
-  const context = useContext(AlertContext);
-  if (!context) {
-    throw new Error('useAlert must be used within an AlertProvider');
-  }
-  return context;
-};
 type Props = {
   children: ReactNode;
 };

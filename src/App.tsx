@@ -1,14 +1,15 @@
-import { RouterProvider } from 'react-router-dom';
-import { router } from './routes/router';
-import { Suspense } from 'react';
 import { ThemeProvider } from '@emotion/react';
 import { CssBaseline } from '@mui/material';
-import theme from './utils/theme';
+import { Suspense } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
+import { RouterProvider } from 'react-router-dom';
 import { AlertProvider, Spinner } from './components';
-
-const queryClient = new QueryClient();
+import { router } from './routes/router';
+import theme from './utils/theme';
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { retry: false, refetchOnWindowFocus: false } },
+});
 function App() {
   return (
     <ThemeProvider theme={theme}>
