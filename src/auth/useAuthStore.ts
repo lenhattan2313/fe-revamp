@@ -1,6 +1,5 @@
-import { LOCAL_STORAGE_KEY } from '@/constants';
-import { getItem, setItem } from '@/utils/localStorage';
-import { create } from 'zustand';
+import { StateCreator, create } from 'zustand';
+import { PersistOptions, persist } from 'zustand/middleware';
 
 interface AuthState {
   isAuthenticated: boolean;
@@ -13,26 +12,33 @@ export interface AuthStore extends AuthState {
   setAuthenticated: (args: AuthState) => void;
 }
 
-const initialState: AuthState = {
-  isAuthenticated: getItem(LOCAL_STORAGE_KEY.IS_AUTHENTICATED) || false,
-  accessToken: getItem(LOCAL_STORAGE_KEY.ACCESS_TOKEN) || '',
-  refreshToken: getItem(LOCAL_STORAGE_KEY.REFRESH_TOKEN) || '',
-  shopId: getItem(LOCAL_STORAGE_KEY.SHOP_ID) || '',
+export const initialAuthState: AuthState = {
+  isAuthenticated: false,
+  accessToken: '',
+  refreshToken: '',
+  shopId: '',
 };
-
-const useAuthStore = create<AuthStore>((set) => ({
-  ...initialState,
-  setAuthenticated: ({
-    isAuthenticated,
-    accessToken,
-    refreshToken,
-    shopId,
-  }) => {
-    setItem(LOCAL_STORAGE_KEY.IS_AUTHENTICATED, isAuthenticated);
-    setItem(LOCAL_STORAGE_KEY.ACCESS_TOKEN, accessToken);
-    setItem(LOCAL_STORAGE_KEY.REFRESH_TOKEN, refreshToken);
-    setItem(LOCAL_STORAGE_KEY.SHOP_ID, shopId);
-    set(() => ({ isAuthenticated, accessToken, refreshToken, shopId }));
-  },
-}));
+type MyPersist = (
+  config: StateCreator<AuthStore>,
+  options: PersistOptions<AuthStore>,
+) => StateCreator<AuthStore>;
+const useAuthStore = create<AuthStore>(
+  (persist as MyPersist)(
+    (set) => ({
+      ...initialAuthState,
+      setAuthenticated: ({
+        isAuthenticated,
+        accessToken,
+        refreshToken,
+        shopId,
+      }) => {
+        set(() => ({ isAuthenticated, accessToken, refreshToken, shopId }));
+      },
+    }),
+    {
+      name: 'auth-store',
+      // storage: createJSONStorage(() => sessionStorage),
+    },
+  ),
+);
 export default useAuthStore;

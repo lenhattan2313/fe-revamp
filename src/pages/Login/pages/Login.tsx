@@ -104,6 +104,7 @@ const Login = () => {
 
         <Button
           label="LOGIN"
+          type="submit"
           variant="contained"
           loading={isLoading}
           onClick={handleSubmit(onSubmit)}

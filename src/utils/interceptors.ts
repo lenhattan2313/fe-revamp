@@ -1,4 +1,4 @@
-import { LOCAL_STORAGE_KEY } from '@/constants';
+import useAuthStore from '@/auth/useAuthStore';
 import { RefreshResponse } from '@/pages/Login/types/ILogin';
 import { BaseResponse } from '@/types';
 import {
@@ -7,7 +7,6 @@ import {
   type InternalAxiosRequestConfig,
 } from 'axios';
 import { api } from './axios';
-import { getItem, setItem } from './localStorage';
 export interface ConsoleError {
   status: number;
   data: unknown;
@@ -16,8 +15,8 @@ export interface ConsoleError {
 export const requestInterceptor = (
   config: InternalAxiosRequestConfig,
 ): InternalAxiosRequestConfig => {
-  const token = getItem<string>(LOCAL_STORAGE_KEY.ACCESS_TOKEN);
-  const shopId = getItem<string>(LOCAL_STORAGE_KEY.SHOP_ID);
+  const token = useAuthStore.getState().accessToken;
+  const shopId = useAuthStore.getState().shopId;
   if (token && shopId) {
     config.headers.set('access-token', token);
     config.headers.set('x-client-id', shopId);
@@ -46,18 +45,15 @@ export const errorInterceptor = async (
         '/shop/renewToken',
         undefined,
         {
-          headers: { 'x-rtoken-id': getItem(LOCAL_STORAGE_KEY.REFRESH_TOKEN) },
+          headers: { 'x-rtoken-id': useAuthStore.getState().refreshToken },
         },
       );
       if (data) {
-        setItem(
-          LOCAL_STORAGE_KEY.ACCESS_TOKEN,
-          data.metadata.token.accessToken,
-        );
-        setItem(
-          LOCAL_STORAGE_KEY.REFRESH_TOKEN,
-          data.metadata.token.refreshToken,
-        );
+        useAuthStore.setState((pre) => ({
+          ...pre,
+          accessToken: data.metadata.token.accessToken,
+          refreshToken: data.metadata.token.refreshToken,
+        }));
         originalConfig.headers.set(
           'access-token',
           data.metadata.token.accessToken,

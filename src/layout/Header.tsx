@@ -1,4 +1,4 @@
-import useAuthStore from '@/auth/useAuthStore';
+import useAuthStore, { initialAuthState } from '@/auth/useAuthStore';
 import useNavbarStore from '@/store/useGlobalStore';
 import {
   AccountCircle,
@@ -21,7 +21,7 @@ import { useState } from 'react';
 export const Header = () => {
   const isMenuOpen = useNavbarStore((state) => state.isMenuOpen);
   const toggleMenu = useNavbarStore((state) => state.toggleMenu);
-  const setIsAuthenticated = useAuthStore((state) => state.setIsAuthenticated);
+  const setAuthenticated = useAuthStore((state) => state.setAuthenticated);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const isOpen = Boolean(anchorEl);
 
@@ -35,7 +35,7 @@ export const Header = () => {
     toggleMenu(true);
   }
   function handleLogout() {
-    setIsAuthenticated(false);
+    setAuthenticated(initialAuthState);
   }
   return (
     <Box>
