@@ -8,6 +8,11 @@ export type LoginResponse = {
   token: AuthToken;
 };
 
+export type RefreshResponse = {
+  user: Shop;
+  token: AuthToken;
+};
+
 export type Shop = {
   email: string;
   _id: string;
