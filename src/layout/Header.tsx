@@ -1,4 +1,5 @@
 import useAuthStore, { initialAuthState } from '@/auth/useAuthStore';
+import { useLogout } from '@/pages/Login/api/login';
 import useNavbarStore from '@/store/useGlobalStore';
 import {
   AccountCircle,
@@ -34,8 +35,13 @@ export const Header = () => {
   function handleDrawerOpen() {
     toggleMenu(true);
   }
+  const { mutate: logoutAction, isLoading: isLogoutLoading } = useLogout();
   function handleLogout() {
-    setAuthenticated(initialAuthState);
+    logoutAction(undefined, {
+      onSuccess: () => {
+        setAuthenticated(initialAuthState);
+      },
+    });
   }
   return (
     <Box>
@@ -87,7 +93,9 @@ export const Header = () => {
       >
         <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
         <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-        <MenuItem onClick={handleLogout}>Logout</MenuItem>
+        <MenuItem onClick={handleLogout} disabled={isLogoutLoading}>
+          Logout
+        </MenuItem>
       </Menu>
     </Box>
   );

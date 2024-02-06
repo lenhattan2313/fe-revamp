@@ -36,7 +36,8 @@ export const errorInterceptor = async (
   const originalConfig = error.config as InternalAxiosRequestConfig;
   if (
     originalConfig &&
-    originalConfig.url !== '/login' &&
+    originalConfig.url !== '/shop/login' &&
+    originalConfig.url !== '/shop/renewToken' &&
     error.response &&
     error.response.data.statusCode === 401
   ) {
@@ -64,16 +65,8 @@ export const errorInterceptor = async (
       return Promise.reject(error);
     }
   }
-  if (error.response?.status === 401) {
-    await Promise.reject(error);
-  } else {
-    if (error.response?.data) {
-      return Promise.reject(error.response.data);
-    } else if (error.request) {
-      console.error(error.request);
-    } else {
-      console.error('Error', error.message);
-    }
-    await Promise.reject(error);
+  if (error.response?.data) {
+    return Promise.reject(error.response.data);
   }
+  return Promise.reject(error);
 };

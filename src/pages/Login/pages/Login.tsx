@@ -1,5 +1,6 @@
 import useAuthStore from '@/auth/useAuthStore';
 import { Button, FormInput } from '@/components';
+import { useAlert } from '@/hooks';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import {
@@ -9,13 +10,12 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import { useState } from 'react';
+import { KeyboardEvent, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import { useLogin } from '../api/login';
 import { IFormLoginData } from '../types/ILogin';
-import { useAlert } from '@/hooks';
 const Login = () => {
   const { showSnackbar } = useAlert();
   const theme = useTheme();
@@ -61,6 +61,11 @@ const Login = () => {
       },
     });
   }
+  function handleKeyDown(event: KeyboardEvent<HTMLInputElement>) {
+    if (event.key === 'Enter' || event.keyCode === 13) {
+      handleSubmit(onSubmit)();
+    }
+  }
   return (
     <Box
       sx={{
@@ -90,10 +95,15 @@ const Login = () => {
             label="Password"
             required
             type={showPassword ? 'text' : 'password'}
+            onKeyDown={handleKeyDown}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
-                  <IconButton onClick={handleShowPassword} edge="end">
+                  <IconButton
+                    onClick={handleShowPassword}
+                    edge="end"
+                    tabIndex={-1}
+                  >
                     {showPassword ? <Visibility /> : <VisibilityOff />}
                   </IconButton>
                 </InputAdornment>

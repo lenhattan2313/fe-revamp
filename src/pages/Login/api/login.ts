@@ -1,6 +1,7 @@
 import { QUERY_KEY } from '@/constants';
 import { BaseResponse, ConfigQueryOption } from '@/types';
 import { api } from '@/utils/axios';
+import { usePost } from '@/utils/reactQuery';
 import { AxiosError, AxiosResponse } from 'axios';
 import { useMutation, useQuery } from 'react-query';
 import { IFormLoginData, LoginResponse, Profile } from '../types/ILogin';
@@ -21,6 +22,7 @@ export const useLogin = () => {
     return data;
   });
 };
+export const useLogout = () => usePost('/shop/logout');
 
 export const useResetPassword = () => {
   return useMutation<
