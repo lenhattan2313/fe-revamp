@@ -2,6 +2,12 @@ export type IFormLoginData = {
   email: string;
   password: string;
 };
+export type IFormSignUpData = {
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+};
 
 export type LoginResponse = {
   shop: Shop;
@@ -28,4 +34,8 @@ export type Profile = {
   displayName: string;
   email: string;
   roles: string[];
+};
+export type IShowPasswordConfirm = {
+  password: boolean;
+  confirmPassword: boolean;
 };

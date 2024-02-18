@@ -3,7 +3,7 @@ import { ProductPage } from '@/pages/Product/pages';
 import { createBrowserRouter } from 'react-router-dom';
 import { ErrorPage } from '../pages/Error/ErrorPage';
 import { HomePage } from '../pages/Home/pages';
-import { LoginPage } from '../pages/Login/pages';
+import { LoginPage, SignUpPage } from '../pages/Login/pages';
 import PrivateRoute from './PrivateRoute';
 export const router = createBrowserRouter([
   {
@@ -25,4 +25,5 @@ export const router = createBrowserRouter([
     ],
   },
   { path: 'login', element: <LoginPage /> },
+  { path: 'signUp', element: <SignUpPage /> },
 ]);

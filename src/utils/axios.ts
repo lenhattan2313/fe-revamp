@@ -4,7 +4,6 @@ import {
   requestInterceptor,
   successInterceptor,
 } from './interceptors';
-console.log('aaa', import.meta.env.VITE_API_URL);
 const axiosRequestConfig: AxiosRequestConfig = {
   baseURL: import.meta.env.VITE_API_URL,
   responseType: 'json',

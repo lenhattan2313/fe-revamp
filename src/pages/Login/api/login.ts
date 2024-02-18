@@ -4,7 +4,12 @@ import { api } from '@/utils/axios';
 import { usePost } from '@/utils/reactQuery';
 import { AxiosError, AxiosResponse } from 'axios';
 import { useMutation, useQuery } from 'react-query';
-import { IFormLoginData, LoginResponse, Profile } from '../types/ILogin';
+import {
+  IFormLoginData,
+  IFormSignUpData,
+  LoginResponse,
+  Profile,
+} from '../types/ILogin';
 
 export const useLogin = () => {
   return useMutation<
@@ -34,7 +39,19 @@ export const useResetPassword = () => {
     return response;
   });
 };
-
+export const useSignUp = () => {
+  return useMutation<
+    BaseResponse<LoginResponse>,
+    BaseResponse<string>,
+    Partial<IFormSignUpData>
+  >(async ({ email, password, name }: Partial<IFormSignUpData>) => {
+    const { data } = await api.post<BaseResponse<LoginResponse>>(
+      '/shop/signup',
+      { name, email, password },
+    );
+    return data;
+  });
+};
 export const useGetProfile = (
   config?: ConfigQueryOption<BaseResponse<Profile>>,
 ) => {

@@ -12,36 +12,47 @@ import {
 } from '@mui/material';
 import { KeyboardEvent, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
-import { useLogin } from '../api/login';
-import { IFormLoginData } from '../types/ILogin';
-const Login = () => {
+import { useSignUp } from '../api/login';
+import { IFormSignUpData, IShowPasswordConfirm } from '../types/ILogin';
+const SignUp = () => {
   const { showSnackbar } = useAlert();
   const theme = useTheme();
   const navigate = useNavigate();
-  const [showPassword, setShowPassword] = useState(false);
-  function handleShowPassword() {
-    setShowPassword((pre) => !pre);
+  const [showPassword, setShowPassword] = useState<IShowPasswordConfirm>({
+    password: false,
+    confirmPassword: false,
+  });
+  function handleShowPassword(type: keyof IShowPasswordConfirm) {
+    setShowPassword((pre) => ({ ...pre, [type]: !pre[type] }));
   }
   const validateSchema = yup.object().shape({
+    name: yup.string().required('Field is required!'),
     email: yup.string().required('Field is required!'),
     password: yup.string().required('Field is required!'),
+    confirmPassword: yup.string().required('Field is required!'),
   });
-  const form = useForm<IFormLoginData>({
+  const form = useForm<IFormSignUpData>({
     defaultValues: {
+      name: '',
       email: '',
       password: '',
+      confirmPassword: '',
     },
     resolver: yupResolver(validateSchema),
   });
   const { handleSubmit } = form;
-  const { mutate: loginAction, isLoading } = useLogin();
+  const { mutate: signUpAction, isLoading } = useSignUp();
 
   const setAuthenticated = useAuthStore((state) => state.setAuthenticated);
-  function onSubmit(data: IFormLoginData) {
+  function onSubmit(data: IFormSignUpData) {
     if (!data) return;
-    loginAction(data, {
+    if (data.confirmPassword !== data.password) {
+      showSnackbar('Passwords do not match ', 'error');
+      return;
+    }
+    signUpAction(data, {
       onError: (error) => {
         showSnackbar(error.message, 'error');
       },
@@ -88,24 +99,48 @@ const Login = () => {
           gap: 2,
         }}
       >
-        <Typography variant="h5">Welcome</Typography>
+        <Typography variant="h5">Create Account</Typography>
         <FormProvider {...form}>
+          <FormInput name="name" label="Name" required />
           <FormInput name="email" label="Email" required />
           <FormInput
             name="password"
             label="Password"
             required
-            type={showPassword ? 'text' : 'password'}
+            type={showPassword.password ? 'text' : 'password'}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => handleShowPassword('password')}
+                    edge="end"
+                    tabIndex={-1}
+                  >
+                    {showPassword.password ? <Visibility /> : <VisibilityOff />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+          <FormInput
+            name="confirmPassword"
+            label="Confirm Password"
+            required
+            type={showPassword.confirmPassword ? 'text' : 'password'}
             onKeyDown={handleKeyDown}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton
-                    onClick={handleShowPassword}
+                    onClick={() => handleShowPassword('confirmPassword')}
                     edge="end"
                     tabIndex={-1}
                   >
-                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                    {showPassword.confirmPassword ? (
+                      <Visibility />
+                    ) : (
+                      <VisibilityOff />
+                    )}
                   </IconButton>
                 </InputAdornment>
               ),
@@ -114,15 +149,15 @@ const Login = () => {
         </FormProvider>
 
         <Button
-          label="LOGIN"
+          label="SIGN UP"
           type="submit"
           variant="contained"
           loading={isLoading}
           onClick={handleSubmit(onSubmit)}
         />
-        <Box
-          to={'/signUp'}
-          component={RouterLink}
+          <Box
+          to={'/login'}
+          component={Link}
           sx={{
             textDecoration: 'none',
             textAlign: 'right',
@@ -130,11 +165,11 @@ const Login = () => {
             fontSize: '0.8rem',
           }}
         >
-          Sign up
+          Back to login
         </Box>
       </Box>
     </Box>
   );
 };
 
-export default Login;
+export default SignUp;
