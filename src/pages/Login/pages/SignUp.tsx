@@ -2,7 +2,7 @@ import useAuthStore from '@/auth/useAuthStore';
 import { Button, FormInput } from '@/components';
 import { useAlert } from '@/hooks';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { ArrowBack, Visibility, VisibilityOff } from '@mui/icons-material';
 import {
   Box,
   IconButton,
@@ -155,16 +155,20 @@ const SignUp = () => {
           loading={isLoading}
           onClick={handleSubmit(onSubmit)}
         />
-          <Box
+        <Box
           to={'/login'}
           component={Link}
           sx={{
             textDecoration: 'none',
-            textAlign: 'right',
             color: theme.palette.primary.main,
             fontSize: '0.8rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+            gap: 1,
           }}
         >
+          <ArrowBack fontSize="small" />
           Back to login
         </Box>
       </Box>
